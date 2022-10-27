@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.app.mapper.AppMapper">
+
+    <select id="getAllApp" resultType="cn.app.entity.App">
+        SELECT a1.id, a1.softwareName, a1.APKName, a1.supportROM, a1.interfaceLanguage, a1.softwareSize, a1.updateDate, a1.devId, a1.appInfo, a1.status, a1.onSaleDate, a1.offSaleDate, a1.flatformId, a1.categoryLevel3, a1.downloads, a1.createdBy, a1.creationDate, a1.modifyBy, a1.modifyDate, a1.categoryLevel1, a1.categoryLevel2, a1.logoPicPath, a1.logoLocPath, a1.versionId, d1.id, d1.typeCode, d1.typeName, d1.valueId, d1.valueName, d1.createdBy, d1.creationDate, d1.modifyBy, d1.modifyDate, c1.id, c1.categoryCode, c1.categoryName, c1.parentId, c1.createdBy, c1.creationTime, c1.modifyBy, c1.modifyDate,d1.valueName as flatformName,d1.`valueName`,c1.`categoryName`,c2.`categoryName`,c3.`categoryName` FROM `app_info` a1
+                                                                                               INNER JOIN `data_dictionary`   d1
+                                                                                                          ON a1.`flatformId`=d1.`valueId`
+                                                                                               INNER JOIN `data_dictionary`   d2
+                                                                                                          ON a1.`status`=d2.`valueId`
+                                                                                               INNER JOIN `app_category` c1
+                                                                                                          ON a1.`categoryLevel1`=c1.id
+                                                                                               INNER JOIN `app_category` c2
+                                                                                                          ON a1.`categoryLevel2`=c2.id
+                                                                                               INNER JOIN `app_category` c3
+                                                                                                          ON a1.`categoryLevel3`=c3.`id`
+        WHERE d1.`typeCode`='APP_FLATFORM'
+          AND d2.`typeCode`='APP_STATUS';
+    </select>
+    <select id="getAppByInfo" resultType="cn.app.entity.App">
+        select * from app_info
+        <where>
+            <if test="#{softwareName} != null and #{softwareName} != ''">
+                 softwareName like CONCAT('%',#{softwareName},'%')
+            </if>
+            <if test="#{flatformName} != null and #{flatformName} != ''">
+                flatformName = #{flatformName}
+            </if>
+        </where>
+
+        order by asc
+    </select>
+
+</mapper>
